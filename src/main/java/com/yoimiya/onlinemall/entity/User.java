@@ -1,0 +1,48 @@
+package com.yoimiya.onlinemall.entity;
+
+import lombok.Data;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+/**
+ * 用户实体类
+ */
+@Data
+public class User {
+
+    /**
+     * 主键ID
+     */
+    private Long id;
+
+    /**
+     * 用户名
+     */
+    private String username;
+
+    /**
+     * 密码（BCrypt加密）
+     */
+    private String password;
+
+    /**
+     * 邮箱
+     */
+    private String email;
+
+    /**
+     * 账户余额
+     */
+    private BigDecimal balance;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createdAt;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updatedAt;
+}
