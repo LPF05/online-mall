@@ -37,3 +37,10 @@ build/
 
 ### Claude Code ###
 .claude/
+
+### Trae ###
+.trae/
+
+### agent ###
+.agents/
+AGENTS.md

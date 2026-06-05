@@ -19,11 +19,19 @@ public class Product {
 
     private BigDecimal price;
 
+    private BigDecimal originalPrice;
+
     private Integer stock;
 
     private String category;
 
     private String imageUrl;
+
+    private Integer isOnSale;
+
+    private LocalDateTime saleStart;
+
+    private LocalDateTime saleEnd;
 
     private Integer viewCount;
 
