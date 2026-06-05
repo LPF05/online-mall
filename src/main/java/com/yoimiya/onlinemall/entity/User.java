@@ -32,9 +32,24 @@ public class User {
     private String email;
 
     /**
+     * 手机号
+     */
+    private String phone;
+
+    /**
      * 账户余额
      */
     private BigDecimal balance;
+
+    /**
+     * 积分
+     */
+    private Integer points;
+
+    /**
+     * 用户角色
+     */
+    private String role;
 
     /**
      * 创建时间

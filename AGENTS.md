@@ -6,28 +6,32 @@
 
 ## 技术栈
 
+### 后端
+
 | 技术 | 版本 | 用途 |
 |------|------|------|
 | Spring Boot | 4.0.6 | 后端框架 |
 | Spring Security | 同 Boot | 认证授权 |
 | MyBatis | 3.0.3 | ORM 框架 |
 | MySQL | 8.0 | 关系型数据库 |
-| JWT | 0.12.x | Token 认证 |
+| JWT | 0.12.3 | Token 认证 |
 | Lombok | 最新 | 简化代码 |
-| Hutool | 最新 | 工具类库 |
+| Hutool | 5.8.27 | 工具类库 |
 | Docker Compose | - | 环境编排 |
 | JDK | 21 | 运行环境 |
 
-注：Redis 和 Elasticsearch 暂时不启用，等需要时再添加
+### 前端
 
-## 项目状态
-
-- ✅ 项目基础框架搭建完成
-- ✅ MyBatis 集成成功
-- ✅ Hello World 测试接口可用
-- ✅ Docker Compose 环境配置完成（仅 MySQL）
-- ✅ 数据库初始化脚本完成
-- ⏳ 后续功能待开发
+| 技术 | 版本 | 用途 |
+|------|------|------|
+| Vue | 3.4 | 前端框架 |
+| TypeScript | 5.4 | 类型安全 |
+| Vite | 5.1 | 构建工具 |
+| Vue Router | 4.3 | 路由管理 |
+| Pinia | 2.1 | 状态管理 |
+| Element Plus | 2.14 | UI 组件库 |
+| Axios | 1.6 | HTTP 客户端 |
+| Sass | 1.72 | CSS 预处理器 |
 
 ## 如何启动
 
@@ -39,105 +43,63 @@ docker-compose up -d
 
 ### 2. 初始化数据库
 
-#### 方式一：使用 MySQL 客户端命令行
-
 ```bash
-# 执行建表脚本
+# 建表
 mysql -h 127.0.0.1 -P 3306 -u mall -pmall123456 < init.sql
 
-# 执行测试数据脚本
+# 增量表（address/favorite/review 等后续添加的表）
+mysql -h 127.0.0.1 -P 3306 -u mall -pmall123456 < update_tables.sql
+
+# 测试数据
 mysql -h 127.0.0.1 -P 3306 -u mall -pmall123456 < data.sql
 ```
 
-#### 方式二：进入 Docker 容器执行
+或通过 Docker：
 
-```bash
-# 执行建表脚本
-docker exec -i online-mall-mysql mysql -u mall -pmall123456 < init.sql
-
-# 执行测试数据脚本
-docker exec -i online-mall-mysql mysql -u mall -pmall123456 < data.sql
+```powershell
+Get-Content init.sql | docker exec -i online-mall-mysql mysql -u mall -pmall123456 online_mall
+Get-Content update_tables.sql | docker exec -i online-mall-mysql mysql -u mall -pmall123456 online_mall
+Get-Content data.sql | docker exec -i online-mall-mysql mysql -u mall -pmall123456 online_mall
 ```
 
-### 3. 启动后端服务
+### 3. 启动后端
 
 ```bash
 mvn spring-boot:run
 ```
 
-## 需求分析（第一性原理）
+### 4. 启动前端
 
-从第一性原理思考，电商核心需要：用户、商品、购物车、订单
+```bash
+npm install
+npm run dev
+```
 
-### 用户系统
+访问 `http://localhost:3000`
 
-- 用户注册（用户名、邮箱、密码）
-- 用户登录（邮箱 + 密码）
-- 账户余额管理
-- 用户信息查询
+## 功能模块
 
-### 商品系统
+- 用户系统：注册、登录、个人信息、余额、积分
+- 商品系统：列表、搜索、排序、价格筛选、特卖、热销
+- 购物车：添加、修改数量、删除、清空、同商品叠加
+- 订单系统：创建、支付、取消、确认收货、管理员发货
+- 收货地址：增删改、设默认
+- 商品收藏：收藏/取消、收藏列表
+- 商品评价：评分+评论、防重复
+- 浏览记录：自动记录、去重合并
+- 访问日志：PV/UV 统计
+- 管理员后台：商品管理、订单管理
 
-- 商品 CRUD
-- 商品分类筛选
-- Elasticsearch 全文搜索
-- 商品热度排行（按浏览量、销量）
+## 数据库表
 
-### 购物车系统
-
-- 添加商品到购物车
-- 修改购物车商品数量
-- 删除购物车商品
-- 查看购物车
-
-### 订单系统
-
-- 创建订单（从购物车）
-- 订单支付（余额支付）
-- 查看订单列表
-- 查看订单详情
-
-### 浏览记录
-
-- 记录用户浏览历史
-- 查看个人浏览历史
-
-### 日志采集与分析
-
-- 页面访问日志采集
-- 基础访问统计（PV、UV）
-
-## 数据库表设计
-
-### user（用户表）
-- id, username, password, email, balance, created_at, updated_at
-
-### product（商品表）
-- id, name, description, price, stock, category, image_url, view_count, sales_count, created_at, updated_at
-
-### cart（购物车表）
-- id, user_id, items(JSON), created_at, updated_at
-
-### order（订单表）
-- id, order_no, user_id, items(JSON), total_amount, status, created_at, updated_at
-
-### browse_history（浏览记录表）
-- id, user_id, product_id, created_at
-
-### access_log（访问日志表）
-- id, user_id, page_url, ip, user_agent, session_id, created_at
-
-## TODO List
-
-- [x] 数据库表设计
-- [x] 技术栈确定
-- [ ] Docker Compose 环境配置
-- [ ] 项目基础架构搭建
-- [ ] 用户系统实现
-- [ ] 商品系统实现
-- [ ] 购物车系统实现
-- [ ] 订单系统实现
-- [ ] 浏览记录实现
-- [ ] 日志采集与分析实现
-- [ ] Elasticsearch 集成
-- [ ] 前端页面开发
+| 表名 | 说明 |
+|------|------|
+| user | 用户（含 role、phone、points） |
+| product | 商品（含 is_on_sale、original_price） |
+| cart | 购物车（items JSON） |
+| order | 订单（items JSON，status 0-4） |
+| favorite | 收藏（user_id + product_id 唯一索引） |
+| browse_history | 浏览记录（user_id + product_id 唯一索引，ON DUPLICATE KEY UPDATE） |
+| address | 收货地址（含 is_default） |
+| review | 评价（含 rating、order_no） |
+| access_log | 访问日志 |
