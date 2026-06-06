@@ -41,7 +41,3 @@ dist/
 
 ### Claude Code ###
 .claude/
-
-AGENTS.md
-.agents/
-.trae/
