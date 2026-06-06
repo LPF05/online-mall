@@ -32,9 +32,16 @@ build/
 ### VS Code ###
 .vscode/
 
+### Node.js ###
+node_modules/
+dist/
+
 ### Mac OS ###
 .DS_Store
 
 ### Claude Code ###
 .claude/
 
+AGENTS.md
+.agents/
+.trae/

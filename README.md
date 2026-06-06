@@ -144,24 +144,25 @@ online-mall/
 │   ├── interceptor/     # 拦截器 (访问日志)
 │   ├── mapper/          # MyBatis Mapper
 │   ├── security/        # JWT 工具与过滤器
-│   ├── service/         # 业务逻辑层
-│   └── util/            # 工具类
+│   └── service/         # 业务逻辑层
 ├── src/main/resources/
 │   └── application.properties   # 后端配置
-├── src/                   # 前端源码
-│   ├── api/              # API 请求封装
-│   ├── assets/           # 静态资源 (样式、图片)
-│   ├── components/       # 公共组件
-│   ├── router/           # 路由配置
-│   ├── stores/           # Pinia 状态管理
-│   └── views/            # 页面组件
+├── frontend/              # 前端源码
+│   ├── src/
+│   │   ├── api/          # API 请求封装
+│   │   ├── assets/       # 静态资源 (样式、图片)
+│   │   ├── components/   # 公共组件
+│   │   ├── router/       # 路由配置
+│   │   ├── stores/       # Pinia 状态管理
+│   │   └── views/        # 页面组件
+│   ├── index.html        # 入口 HTML
+│   ├── package.json      # 前端依赖
+│   └── vite.config.ts    # Vite 配置
 ├── init.sql              # 数据库建表脚本
 ├── data.sql              # 测试数据脚本
 ├── update_tables.sql     # 数据库增量更新脚本
 ├── docker-compose.yml    # Docker 编排
-├── pom.xml               # Maven 配置
-├── package.json          # 前端依赖
-└── vite.config.ts        # Vite 配置
+└── pom.xml               # Maven 配置
 ```
 
 ## 环境要求
@@ -197,29 +198,28 @@ docker exec online-mall-mysql mysql -u mall -pmall123456 -e "SELECT 1"
 
 ### 3. 初始化数据库
 
-```powershell
-# PowerShell
-Get-Content init.sql | docker exec -i online-mall-mysql mysql -u mall -pmall123456 online_mall
-Get-Content update_tables.sql | docker exec -i online-mall-mysql mysql -u mall -pmall123456 online_mall
-Get-Content data.sql | docker exec -i online-mall-mysql mysql -u mall -pmall123456 online_mall
-```
-
 ```bash
-# Bash / Zsh
-docker exec -i online-mall-mysql mysql -u mall -pmall123456 online_mall < init.sql
-docker exec -i online-mall-mysql mysql -u mall -pmall123456 online_mall < update_tables.sql
-docker exec -i online-mall-mysql mysql -u mall -pmall123456 online_mall < data.sql
+# 1) 将 SQL 文件复制到容器
+docker cp init.sql online-mall-mysql:/tmp/init.sql
+docker cp data.sql online-mall-mysql:/tmp/data.sql
+
+# 2) 在容器内执行
+docker exec online-mall-mysql mysql -u mall -pmall123456 online_mall -e "source /tmp/init.sql"
+docker exec online-mall-mysql mysql -u mall -pmall123456 online_mall -e "source /tmp/data.sql"
 ```
 
 ### 4. 安装前端依赖
 
 ```bash
+cd frontend
 npm install
 ```
 
 ### 5. 启动后端
 
 ```bash
+# 在项目根目录执行
+cd online-mall
 mvn spring-boot:run
 ```
 
@@ -228,6 +228,8 @@ mvn spring-boot:run
 ### 6. 启动前端
 
 ```bash
+# 在 frontend 目录执行
+cd frontend
 npm run dev
 ```
 
@@ -452,9 +454,10 @@ docker-compose down -v
 docker-compose up -d
 
 # 重新初始化
-mysql -h 127.0.0.1 -P 3306 -u mall -pmall123456 < init.sql
-mysql -h 127.0.0.1 -P 3306 -u mall -pmall123456 < update_tables.sql
-mysql -h 127.0.0.1 -P 3306 -u mall -pmall123456 < data.sql
+docker cp init.sql online-mall-mysql:/tmp/init.sql
+docker cp data.sql online-mall-mysql:/tmp/data.sql
+docker exec online-mall-mysql mysql -u mall -pmall123456 online_mall -e "source /tmp/init.sql"
+docker exec online-mall-mysql mysql -u mall -pmall123456 online_mall -e "source /tmp/data.sql"
 ```
 
 ### Q: 如何添加管理员账号？

@@ -113,10 +113,9 @@ const handleSubmit = async () => {
     authStore.login(form.email, form.password)
       .then(() => {
         ElMessage.success('登录成功！')
-        router.push('/')
       })
       .catch((error) => {
-        ElMessage.error('登录失败：' + (error as Error).message)
+        ElMessage.error((error as Error).message || '登录失败')
       })
       .finally(() => {
         isLoading.value = false

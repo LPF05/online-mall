@@ -9,31 +9,19 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = computed(() => !!token.value)
 
   const login = async (email: string, password: string) => {
-    try {
-      const data = await authAPI.login({ email, password })
-      const receivedToken = data.token
-      token.value = receivedToken
-      localStorage.setItem('token', receivedToken)
-      // Fetch user info after login to populate role for route guard
-      const userStore = useUserStore()
-      await userStore.fetchUser()
-      router.push('/')
-      return true
-    } catch (error) {
-      console.error('Login failed:', error)
-      return false
-    }
+    const data = await authAPI.login({ email, password })
+    const receivedToken = data.token
+    token.value = receivedToken
+    localStorage.setItem('token', receivedToken)
+    // Fetch user info after login to populate role for route guard
+    const userStore = useUserStore()
+    await userStore.fetchUser()
+    router.push('/')
   }
 
   const register = async (username: string, email: string, password: string) => {
-    try {
-      await authAPI.register({ username, email, password })
-      router.push('/login')
-      return true
-    } catch (error) {
-      console.error('Register failed:', error)
-      return false
-    }
+    await authAPI.register({ username, email, password })
+    router.push('/login')
   }
 
   const logout = () => {

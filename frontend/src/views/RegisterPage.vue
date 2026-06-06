@@ -128,7 +128,7 @@ const handleRegister = async () => {
         form.confirmPassword = ''
       })
       .catch((error) => {
-        ElMessage.error('注册失败：' + (error as Error).message)
+        ElMessage.error((error as Error).message || '注册失败')
       })
       .finally(() => {
         isLoading.value = false
