@@ -38,15 +38,14 @@ request.interceptors.response.use(
     return res.data
   },
   (error) => {
-    console.error('Request Error:', error.message)
     if (error.response) {
-      const status = error.response.status
+      const { status, data } = error.response
+      const message = data?.message || data?.msg || error.message
       if (status === 401) {
         localStorage.removeItem('token')
         router.push('/login')
-      } else if (status === 500) {
-        console.error('Server error:', error.response.data)
       }
+      return Promise.reject(new Error(message))
     }
     return Promise.reject(error)
   }

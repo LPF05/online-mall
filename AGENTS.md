@@ -44,22 +44,11 @@ docker-compose up -d
 ### 2. 初始化数据库
 
 ```bash
-# 建表
-mysql -h 127.0.0.1 -P 3306 -u mall -pmall123456 < init.sql
-
-# 增量表（address/favorite/review 等后续添加的表）
-mysql -h 127.0.0.1 -P 3306 -u mall -pmall123456 < update_tables.sql
-
-# 测试数据
-mysql -h 127.0.0.1 -P 3306 -u mall -pmall123456 < data.sql
-```
-
-或通过 Docker：
-
-```powershell
-Get-Content init.sql | docker exec -i online-mall-mysql mysql -u mall -pmall123456 online_mall
-Get-Content update_tables.sql | docker exec -i online-mall-mysql mysql -u mall -pmall123456 online_mall
-Get-Content data.sql | docker exec -i online-mall-mysql mysql -u mall -pmall123456 online_mall
+# 将 SQL 文件复制到容器内执行
+docker cp init.sql online-mall-mysql:/tmp/init.sql
+docker cp data.sql online-mall-mysql:/tmp/data.sql
+docker exec online-mall-mysql mysql -u mall -pmall123456 online_mall -e "source /tmp/init.sql"
+docker exec online-mall-mysql mysql -u mall -pmall123456 online_mall -e "source /tmp/data.sql"
 ```
 
 ### 3. 启动后端
@@ -71,6 +60,7 @@ mvn spring-boot:run
 ### 4. 启动前端
 
 ```bash
+cd frontend
 npm install
 npm run dev
 ```

@@ -7,15 +7,16 @@ TRUNCATE TABLE cart;
 TRUNCATE TABLE product;
 TRUNCATE TABLE user;
 
-INSERT INTO user (username, password, email, balance, created_at, updated_at) VALUES
-('张三', '$2a$10$lszfqRMDdpnlvzz2x1yn2OdGCznPMMr8k/fkoA3jBeajPGQfITLni', 'zhangsan@example.com', 1500.00, NOW(), NOW()),
-('李四', '$2a$10$lszfqRMDdpnlvzz2x1yn2OdGCznPMMr8k/fkoA3jBeajPGQfITLni', 'lisi@example.com', 800.00, NOW(), NOW()),
-('王五', '$2a$10$lszfqRMDdpnlvzz2x1yn2OdGCznPMMr8k/fkoA3jBeajPGQfITLni', 'wangwu@example.com', 3000.00, NOW(), NOW()),
-('赵六', '$2a$10$lszfqRMDdpnlvzz2x1yn2OdGCznPMMr8k/fkoA3jBeajPGQfITLni', 'zhaoliu@example.com', 500.00, NOW(), NOW()),
-('陈七', '$2a$10$lszfqRMDdpnlvzz2x1yn2OdGCznPMMr8k/fkoA3jBeajPGQfITLni', 'chenqi@example.com', 2500.00, NOW(), NOW()),
-('小明', '$2a$10$lszfqRMDdpnlvzz2x1yn2OdGCznPMMr8k/fkoA3jBeajPGQfITLni', 'xiaoming@example.com', 5000.00, NOW(), NOW()),
-('小红', '$2a$10$lszfqRMDdpnlvzz2x1yn2OdGCznPMMr8k/fkoA3jBeajPGQfITLni', 'xiaohong@example.com', 1200.00, NOW(), NOW()),
-('小李', '$2a$10$lszfqRMDdpnlvzz2x1yn2OdGCznPMMr8k/fkoA3jBeajPGQfITLni', 'xiaoli@example.com', 8800.00, NOW(), NOW());
+INSERT INTO user (username, password, email, phone, balance, role, points, created_at, updated_at) VALUES
+('张三', '$2a$10$hg81ngGaoRKDwlUyeZO9v.F.h4jvymebLkEk13eLeRuE5SL3O3xJS', 'zhangsan@example.com', '13800000001', 1500.00, 'USER', 1500, NOW(), NOW()),
+('李四', '$2a$10$TOsLqkstE8IlMqpJzE4Z..5JWfnGFomqUV5GsEHIjbQ7vi4HZu73i', 'lisi@example.com', '13800000002', 800.00, 'USER', 800, NOW(), NOW()),
+('王五', '$2a$10$/Vu62rzPJtm3gbzKCCBHBeJIGvd6m2a3ojum9QGm7UBHu9GqQAgga', 'wangwu@example.com', '13800000003', 3000.00, 'USER', 3000, NOW(), NOW()),
+('赵六', '$2a$10$rZYPhUhL9zggHDL.elScp.NjMLMUCfMtoP5LgtBxIZkxK2cM/uHN.', 'zhaoliu@example.com', '13800000004', 500.00, 'USER', 500, NOW(), NOW()),
+('陈七', '$2a$10$Az9NrMrvRNjTPe7aSlCyGukxO.BPKQnvNjRQYOhrFk6BaqatDf94G', 'chenqi@example.com', '13800000005', 2500.00, 'USER', 2500, NOW(), NOW()),
+('小明', '$2a$10$45X1Jo0.fO9i75hJ8J/kQ.Z98JAPfJZdV9cZRdcnKIiIfcZIu5mia', 'xiaoming@example.com', '13800000006', 5000.00, 'USER', 5000, NOW(), NOW()),
+('小红', '$2a$10$OBOen58kyv1GLTZ27G4VZ.XOKiFkEz6O0hIfUaOASSbAOrl8S9HIq', 'xiaohong@example.com', '13800000007', 1200.00, 'USER', 1200, NOW(), NOW()),
+('小李', '$2a$10$bfe81pZzKv4sCkDQng2V9uq0tcDcwj4Uu3vZSC7kl.SP.Qc4oQmz2', 'xiaoli@example.com', '13800000008', 8800.00, 'USER', 8800, NOW(), NOW()),
+('管理员', '$2a$10$HIyPlN49jvPtmWxehA/OoOIGt3/IjKOYwCBcQRvDN.3jKhNUfIi.K', 'admin@example.com', '13800000000', 0.00, 'ADMIN', 0, NOW(), NOW());
 
 INSERT INTO product (name, description, price, stock, category, image_url, view_count, sales_count, created_at, updated_at) VALUES
 
