@@ -28,6 +28,8 @@
     </scm>
     <properties>
         <java.version>17</java.version>
+        <!-- 锁定 ES 客户端版本，与本地 ES 8.13 保持一致，避免协议兼容问题 -->
+        <elasticsearch-java.version>8.13.4</elasticsearch-java.version>
     </properties>
     <dependencies>
         <!-- Spring Boot Web -->
@@ -93,6 +95,15 @@
             <artifactId>jjwt-jackson</artifactId>
             <version>0.12.3</version>
             <scope>runtime</scope>
+        </dependency>
+
+        <!-- Elasticsearch：直接使用官方原生 elasticsearch-java 8.13 客户端
+             不引入 spring-boot-starter-data-elasticsearch，因为它绑定 ES 9.x，
+             与本地 ES 8.13 服务器 Content-Type 协议不兼容 -->
+        <dependency>
+            <groupId>co.elastic.clients</groupId>
+            <artifactId>elasticsearch-java</artifactId>
+            <version>${elasticsearch-java.version}</version>
         </dependency>
 
         <!-- Hutool 工具类 -->
