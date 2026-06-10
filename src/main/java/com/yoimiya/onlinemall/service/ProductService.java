@@ -1,5 +1,8 @@
 package com.yoimiya.onlinemall.service;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch.core.IndexRequest;
+import com.yoimiya.onlinemall.document.ProductDocument;
 import com.yoimiya.onlinemall.entity.Product;
 import com.yoimiya.onlinemall.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +15,15 @@ import java.util.List;
 @Service
 public class ProductService {
 
+    private static final String ES_INDEX = "product";
+
     @Autowired
     private ProductMapper productMapper;
+
+    @Autowired
+    private ElasticsearchClient elasticsearchClient;
+
+    private ProductDocument toDocument(Product p) { return ProductDocument.fromEntity(p); }
 
     public List<Product> getProductList(String category, String sort, String keyword,
                                          Double minPrice, Double maxPrice) {
@@ -60,11 +70,32 @@ public class ProductService {
 
     public Product createProduct(Product product) {
         productMapper.insert(product);
+        try {
+            ProductDocument doc = toDocument(product);
+            elasticsearchClient.index(IndexRequest.of(i -> i
+                    .index(ES_INDEX)
+                    .id(String.valueOf(doc.getId()))
+                    .document(doc)));
+        } catch (Exception e) {
+            System.err.println("[ES] 创建商品同步失败: " + e.getMessage());
+        }
         return product;
     }
 
     public Product updateProduct(Product product) {
         productMapper.update(product);
+        try {
+            Product fresh = productMapper.findById(product.getId());
+            if (fresh != null) {
+                ProductDocument doc = toDocument(fresh);
+                elasticsearchClient.index(IndexRequest.of(i -> i
+                        .index(ES_INDEX)
+                        .id(String.valueOf(doc.getId()))
+                        .document(doc)));
+            }
+        } catch (Exception e) {
+            System.err.println("[ES] 更新商品同步失败: " + e.getMessage());
+        }
         return product;
     }
 
@@ -74,6 +105,11 @@ public class ProductService {
 
     public void deleteProduct(Long id) {
         productMapper.deleteById(id);
+        try {
+            elasticsearchClient.delete(d -> d.index(ES_INDEX).id(String.valueOf(id)));
+        } catch (Exception e) {
+            System.err.println("[ES] 删除商品同步失败: " + e.getMessage());
+        }
     }
 
     public List<Product> getSaleProducts(int limit) {
